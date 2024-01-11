@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 var shippingDockRouter = require("./routes/shipping_dock");
 var orderRouter = require("./routes/order");
 var transactionRouter = require("./routes/transaction");
+var reportRouter = require("./routes/report");
 
 const db = require("./models");
 var cors = require("cors");
@@ -30,6 +31,7 @@ app.use("/users", usersRouter);
 app.use("/api/v1/shipping_dock", shippingDockRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/transaction", transactionRouter);
+app.use("/api/v1/report", reportRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

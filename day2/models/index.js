@@ -14,7 +14,7 @@ let Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const { DataTypes } = require("sequelize");
 const config = {
-  DB_DATABASE: "mysql",
+  DB_DATABASE: "day_1",
   DB_USERNAME: "root",
   DB_PASSWORD: "",
   DB_ADAPTER: "mysql",
