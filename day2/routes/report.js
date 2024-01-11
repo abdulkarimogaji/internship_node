@@ -1,14 +1,12 @@
 var express = require("express");
-const { Op, Sequelize } = require("sequelize");
-const PaginationService = require("../../day1/services/PaginationService");
+const { Op, Sequelize, sql } = require("sequelize");
 const {
   sqlDateFormat,
-  getLastDayOfMonth,
   getFirstAndLastDayOfMonth,
 } = require("../services/UtilsService");
 var router = express.Router();
 
-/* GET all. */
+/* GET total_amount by search date. */
 router.get("/sale", async (req, res, next) => {
   try {
     const db = req.app.get("db");
@@ -35,6 +33,35 @@ router.get("/sale", async (req, res, next) => {
     });
 
     res.status(200).json({ error: false, total_amount: result ?? 0 });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
+router.get("/monthly", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const year = req.query.year;
+
+    const result = (
+      await db.sequelize.query(`
+    SELECT
+        DISTINCT MONTHNAME(created_at) AS month,
+        SUM(amount) AS total_amount
+    FROM
+        transaction
+    WHERE
+        YEAR(created_at) = ${year}
+    GROUP BY
+        MONTH(created_at)
+    HAVING
+        total_amount > 0;
+    `)
+    )[0];
+
+    res.status(200).json({ error: false, result });
   } catch (err) {
     console.log("err", err);
     res.status(500).json({ error: true, message: "Something went wrong" });
