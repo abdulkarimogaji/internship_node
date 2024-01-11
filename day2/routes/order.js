@@ -30,6 +30,34 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+/* GET paginate cursor method. */
+router.get("/cursor", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const { limit } = PaginationService.parseQuery(req.query);
+    // get cursor
+    let cursorId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+    cursorId = Number(cursorId) || 0;
+
+    const result = await db.order.findAll({
+      limit: limit,
+      where: {
+        id: {
+          [Op.gt]: cursorId,
+        },
+      },
+    });
+
+    const next_cursor = result[result.length - 1]?.id || 0;
+
+    res.status(200).json({ error: false, list: result, next_cursor });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
 // (Return all odd order_id rows)
 router.get("/odd", async (req, res, next) => {
   try {
