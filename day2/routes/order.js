@@ -1,4 +1,5 @@
 var express = require("express");
+const { Op, Sequelize } = require("sequelize");
 var router = express.Router();
 
 /* GET all. */
@@ -6,6 +7,24 @@ router.get("/", async (req, res, next) => {
   try {
     const db = req.app.get("db");
     const result = await db.order.findAll();
+    res.status(200).json({ error: false, list: result });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
+// (Return all odd order_id rows)
+router.get("/odd", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+    const result = await db.order.findAll({
+      where: {
+        id: {
+          [Op.and]: [{ [Op.not]: null }, Sequelize.literal("(id % 2 = 1)")],
+        },
+      },
+    });
     res.status(200).json({ error: false, list: result });
   } catch (err) {
     console.log("err", err);
