@@ -100,4 +100,35 @@ router.get("/user", async (req, res, next) => {
   }
 });
 
+router.get("/shipping_dock", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const year = req.query.year;
+    const shipping_dock_id = req.query.shipping_dock_id;
+
+    const result = (
+      await db.sequelize.query(`
+    SELECT
+        DISTINCT MONTHNAME(created_at) AS month,
+        SUM(amount) AS total_amount
+    FROM
+        transaction
+    WHERE
+        YEAR(created_at) = ${year} AND shipping_dock_id = ${shipping_dock_id}
+    GROUP BY
+        MONTHNAME(created_at)
+    HAVING
+        total_amount > 0
+    ORDER BY MONTH(created_at);
+    `)
+    )[0];
+
+    res.status(200).json({ error: false, result });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
 module.exports = router;
