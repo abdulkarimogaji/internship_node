@@ -1,13 +1,29 @@
 var express = require("express");
 const { Op, Sequelize } = require("sequelize");
+const PaginationService = require("../../day1/services/PaginationService");
 var router = express.Router();
 
 /* GET all. */
 router.get("/", async (req, res, next) => {
   try {
     const db = req.app.get("db");
-    const result = await db.order.findAll();
-    res.status(200).json({ error: false, list: result });
+
+    const { limit, offset, order } = PaginationService.parseQuery(req.query);
+
+    const { count, rows } = await db.order.findAndCountAll({
+      limit,
+      offset,
+      order,
+    });
+
+    const { total, page, list, num_pages } = PaginationService.getPageData(
+      count,
+      rows,
+      limit,
+      offset
+    );
+
+    res.status(200).json({ error: false, total, page, list, num_pages });
   } catch (err) {
     console.log("err", err);
     res.status(500).json({ error: true, message: "Something went wrong" });
