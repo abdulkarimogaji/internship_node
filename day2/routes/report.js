@@ -131,4 +131,56 @@ router.get("/shipping_dock", async (req, res, next) => {
   }
 });
 
+router.get("/user/count", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const year = req.query.year;
+    const user_id = req.query.user_id;
+
+    const result = (
+      await db.sequelize.query(`
+    SELECT
+        DISTINCT MONTHNAME(created_at) AS month,
+        COUNT(id) AS num_of_sales
+    FROM
+        transaction
+    WHERE
+        YEAR(created_at) = ${year} AND user_id = ${user_id}
+    GROUP BY
+        MONTHNAME(created_at)
+    ORDER BY MONTH(created_at);
+    `)
+    )[0];
+
+    const salesByMonth = result.reduce((a, c) => {
+      a[c.month] = c.num_of_sales;
+      return a;
+    }, {});
+
+    const response = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ].map((month) => ({
+      month,
+      num_of_sales: salesByMonth[month] || 0,
+    }));
+
+    res.status(200).json({ error: false, response });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
 module.exports = router;
