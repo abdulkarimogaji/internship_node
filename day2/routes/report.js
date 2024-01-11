@@ -55,9 +55,41 @@ router.get("/monthly", async (req, res, next) => {
     WHERE
         YEAR(created_at) = ${year}
     GROUP BY
-        MONTH(created_at)
+        MONTHNAME(created_at)
     HAVING
-        total_amount > 0;
+        total_amount > 0
+    ORDER BY MONTH(created_at);
+    `)
+    )[0];
+
+    res.status(200).json({ error: false, result });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "Something went wrong" });
+  }
+});
+
+router.get("/user", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const year = req.query.year;
+    const user_id = req.query.user_id;
+
+    const result = (
+      await db.sequelize.query(`
+    SELECT
+        DISTINCT MONTHNAME(created_at) AS month,
+        SUM(amount) AS total_amount
+    FROM
+        transaction
+    WHERE
+        YEAR(created_at) = ${year} AND user_id = ${user_id}
+    GROUP BY
+        MONTHNAME(created_at)
+    HAVING
+        total_amount > 0
+    ORDER BY MONTH(created_at);
     `)
     )[0];
 
