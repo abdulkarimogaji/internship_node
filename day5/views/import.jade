@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Upload a CSV file and click submit to save
+  form(method="post" action="/api/v1/import" enctype="multipart/form-data")
+    label(for="file") Click to upload
+    input(type="file" accept=".csv" name="file")
+    br
+    br
+    button(type="submit") Submit
