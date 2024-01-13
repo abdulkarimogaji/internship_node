@@ -64,6 +64,13 @@ router.post("/api/v1/import", upload.single("file"), async (req, res, next) => {
   try {
     const db = req.app.get("db");
 
+    if (!req.file) {
+      return res.render("error", {
+        message: "No file was uploaded",
+        error: { status: 400, stack: "" },
+      });
+    }
+
     const transactions = await parseCSV(req.file.buffer);
 
     const results = await Promise.all(
@@ -88,7 +95,10 @@ router.post("/api/v1/import", upload.single("file"), async (req, res, next) => {
       message: `${results.length} transactions saved successfully`,
     });
   } catch (err) {
-    res.render("import_response", { title: "An Error occurred", message: err });
+    res.render("error", {
+      message: "An error occurred",
+      error: { status: 500, stack: err },
+    });
   }
 });
 

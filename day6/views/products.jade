@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+  div(class="products-page")
+    div(class="container")
+      h1= title
+      p Shopify product listing
+      div(class="products-grid")
+        each product in products 
+          div(class="product-card")
+            h3=product.title 
+            p(class="price") $#{(product.id / 10000000).toFixed(2)}
+            p !{product.body_html}
+            img(src=product.image_src)
+            div(class="tag-container")
+              - var tags = product.tags.split(",")
+              each tag in tags
+                span=tag

@@ -1,8 +1,51 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.product-card {
+  background-color: coral;
+  border-radius: 16px;
+  color: white;
+  border: 2px solid white;
+  padding: 12px;
+}
+
+.products-page {
+  background-color: black;
+  text-align: center;
+  color: white;
+  padding: 3rem 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tag-container {
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tag-container span {
+  border-radius: 100vw;
+  padding: 2px 8px;
+  background-color: hsl(16, 100%, 26%);
 }
