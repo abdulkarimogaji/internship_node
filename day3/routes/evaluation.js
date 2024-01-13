@@ -4,7 +4,11 @@ var { Op } = require("sequelize");
 
 function replaceVariables(str, variableObj) {
   Object.entries(variableObj).forEach(([variable, value]) => {
-    str = str.replace(`${variable}`, value);
+    if (typeof value === "string") {
+      str = str.replace(new RegExp(`\\b${variable}\\b`, "gi"), `"${value}"`);
+    } else {
+      str = str.replace(new RegExp(`\\b${variable}\\b`, "gi"), value);
+    }
   });
   return str;
 }
@@ -47,9 +51,17 @@ router.get("/", async (req, res, next) => {
           rule.condition,
           substitutableVariables
         );
-        console.log("con", conditionStr);
-        // evaluate condition
-        if (eval(conditionStr) === true) {
+
+        let conditionResult = false;
+
+        try {
+          conditionResult = eval(conditionStr);
+        } catch (err) {
+          console.log("Condition failed: ", conditionStr, err);
+          conditionResult = false;
+        }
+
+        if (conditionResult === true) {
           return { rule_id: rule.id, action: rule.action };
         }
         return false;
