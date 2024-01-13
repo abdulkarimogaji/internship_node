@@ -29,6 +29,26 @@ function parseCSV(fileBuffer) {
   });
 }
 
+function writeCSV(filename, data) {
+  return new Promise((resolve, reject) => {
+    const writableStream = fs.createWriteStream(filename);
+    const readableStream = new stream.Readable();
+    readableStream.push(
+      data.map((obj) => Object.values(obj).join(",")).join("\n")
+    );
+    readableStream.push(null);
+
+    readableStream
+      .pipe(writableStream)
+      .on("finish", () => {
+        resolve(filename);
+      })
+      .on("error", (error) => {
+        reject(error);
+      });
+  });
+}
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
@@ -69,6 +89,39 @@ router.post("/api/v1/import", upload.single("file"), async (req, res, next) => {
     });
   } catch (err) {
     res.render("import_response", { title: "An Error occurred", message: err });
+  }
+});
+
+router.post("/api/v1/export", async (req, res, next) => {
+  try {
+    const db = req.app.get("db");
+
+    const transactions = await db.transaction.findAll();
+
+    await writeCSV(
+      "output.csv",
+      transactions.map((t) => ({
+        id: t.id,
+        user_id: t.user_id,
+        shipping_dock_id: t.shipping_dock_id,
+        order_id: t.order_id,
+        tax: t.tax,
+        amount: t.amount,
+        discount: t.discount,
+        total: t.total,
+        notes: t.notes,
+        status: t.status,
+      }))
+    );
+
+    res.download("output.csv", "output.csv", (err) => {
+      if (!err) {
+        fs.unlinkSync("output.csv");
+      }
+    });
+  } catch (err) {
+    console.log("err", err);
+    res.status(500).json({ error: true, message: "An error occurred" });
   }
 });
 
