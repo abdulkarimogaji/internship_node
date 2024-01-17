@@ -51,7 +51,7 @@ let sequelize = new Sequelize(
   }
 );
 
-sequelize.sync({ force: true });
+// sequelize.sync({ force: true });
 
 fs.readdirSync(__dirname)
   .filter((file) => {
