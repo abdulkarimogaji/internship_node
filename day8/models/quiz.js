@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       question: DataTypes.STRING,
+      type: DataTypes.STRING,
       correct_answer: DataTypes.INTEGER,
       created_at: DataTypes.DATEONLY,
       updated_at: DataTypes.DATE,

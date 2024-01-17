@@ -1,277 +1,254 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Quiz</title>
     <style>
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-html,
-body {
-  font-family: "Open Sans", sans-serif;
-  line-height: 1.4;
-  background-color: #333;
-}
+      html,
+      body {
+        font-family: "Open Sans", sans-serif;
+        line-height: 1.4;
+        background-color: #333;
+      }
 
-.main {
-  margin: 0 auto;
-  width: 600px;
-  margin-top: 200px;
+      .main {
+        margin: 0 auto;
+        width: 600px;
+        margin-top: 200px;
 
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      }
 
-.hidden {
-  display: none;
-}
+      .hidden {
+        display: none;
+      }
 
-button {
-  padding: 10px;
-  border: 10px;
-  background-color: teal;
-  font-weight: bold;
-  color: white;
-  border-radius: 2px;
-}
-button:hover {
-  cursor: pointer;
-}
-input {
-  margin: 10px;
-  border: none;
-  font-size: large;
-  color: rgba(0, 128, 128, 0.616);
-}
-textarea {
-  border: none;
-  font-size: large;
-  color: rgba(0, 128, 128, 0.616);
-}
-ul {
-  list-style: none;
-  margin-bottom: 10px;
-}
-#bool {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  margin: 10px;
-}
-textarea:focus,
-input:focus {
-  outline: none;
-}
+      button {
+        padding: 10px;
+        border: 10px;
+        background-color: teal;
+        font-weight: bold;
+        color: white;
+        border-radius: 2px;
+      }
+      button:hover {
+        cursor: pointer;
+      }
+      input {
+        margin: 10px;
+        border: none;
+        font-size: large;
+        color: rgba(0, 128, 128, 0.616);
+      }
+      textarea {
+        border: none;
+        font-size: large;
+        color: rgba(0, 128, 128, 0.616);
+      }
+      ul {
+        list-style: none;
+        margin-bottom: 10px;
+      }
+      #bool {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        margin: 10px;
+      }
+      textarea:focus,
+      input:focus {
+        outline: none;
+      }
 
-#yourAnswers p {
-  margin-top: 30px;
-  color: teal;
-}
-
+      #yourAnswers p {
+        margin-top: 30px;
+        color: teal;
+      }
     </style>
-</head>
-<body>
-
-        <div class="main">
-
-
-                <h1>Quiz</h1>
-                <div id="yourAnswers" class="hidden">
-                    <h1 >Your answers</h1>
-                    <pre id="answerObject"></pre>
-                </div>
-                <div class="question" id="questionsDiv">
-
-                    <h2 id="title"></h2>
-                    <ul id ='selectionList'> </ul>
-                    <input id="short"  type="text" class="hidden"/>
-                    <textarea name="" id="long" class="hidden" cols="30" rows="10"></textarea>
-                <div id="bool"></div>
-                <button id="next">Next</button>
-                </div>
-        </div>
+  </head>
+  <body>
+    <div class="main">
+      <h1>Quiz</h1>
+      <div id="yourAnswers" class="hidden">
+        <h1>Your answers</h1>
+        <pre id="answerObject"></pre>
+      </div>
+      <div class="question" id="questionsDiv">
+        <h2 id="title"></h2>
+        <ul id="selectionList"></ul>
+        <input id="short" type="text" class="hidden" />
+        <textarea
+          name=""
+          id="long"
+          class="hidden"
+          cols="30"
+          rows="10"
+        ></textarea>
+        <div id="bool"></div>
+        <button id="next">Next</button>
+      </div>
+    </div>
 
     <script>
-let quiz = [
-  {
-    id: 1,
-    type: "short_answer",
-    question: "Why is the sky blue?",
-    answers: [],
-    correct_answer: 0,
-  },
-  {
-    id: 2,
-    type: "multiple_choice",
-    question: "Why is the sky blue?",
-    answers: [
-      { id: 1, answer: "Because of physics" },
-      { id: 2, answer: "Because that the way it always was" },
-      { id: 3, answer: "I don't know" },
-    ],
-    correct_answer: 1,
-  },
-  {
-    id: 3,
-    type: "multiple_selection_choice",
-    question: "Why is the sky blue?",
-    answers: [
-      { id: 1, answer: "Because of physics" },
-      { id: 2, answer: "Because that the way it always was" },
-      { id: 3, answer: "I don't know" },
-    ],
-    correct_answer: 1,
-  },
-  {
-    id: 4,
-    type: "long_text",
-    question: "Why is the sky blue?",
-    answers: [],
-    correct_answer: 0,
-  },
-  {
-    id: 5,
-    type: "description",
-    question: "random text to show to the user",
-    answers: [],
-    correct_answer: 0,
-  },
-  {
-    id: 6,
-    type: "true_false",
-    question: "Is the sky blue",
-    answers: [],
-    correct_answer: 2,
-  },
-];
+      async function fetchQuiz() {
+        try {
+          const response = await fetch("http://localhost:3000/api/v1/quiz");
+          const json = await response.json();
+          console.log("j", json);
+          return json.list.map((q) => ({
+            id: q.id,
+            type: q.type,
+            question: q.question,
+            correct_answer: q.correct_answer,
+            answers: q.quiz_answers.map((qa) => ({
+              id: qa.id,
+              answer: qa.answer,
+            })),
+          }));
+        } catch (err) {
+          return [];
+        }
+      }
 
-let nextButton = document.getElementById("next");
-let title = document.getElementById("title");
-let selectionList = document.getElementById("selectionList");
-let bool = document.getElementById("bool");
-let inp = document.getElementById("short");
-let text = document.getElementById("long");
-let yourAnswers = document.getElementById("yourAnswers");
-let questionsDiv = document.getElementById("questionsDiv");
-let i = 0;
+      window.addEventListener("load", async () => {
+        let quiz = await fetchQuiz();
 
-let answers = {};
+        let nextButton = document.getElementById("next");
+        let title = document.getElementById("title");
+        let selectionList = document.getElementById("selectionList");
+        let bool = document.getElementById("bool");
+        let inp = document.getElementById("short");
+        let text = document.getElementById("long");
+        let yourAnswers = document.getElementById("yourAnswers");
+        let questionsDiv = document.getElementById("questionsDiv");
+        let i = 0;
 
-//step
-nextButton.onclick = function () {
-  //get the answers
-  if (quiz[i].type == "short_answer") {
-    let x = document.getElementsByClassName("current")[0];
-    let currentAnswer = x.value;
-    let question = quiz[i].question;
-    let answer = { [question]: currentAnswer };
-    answers = { ...answers, [quiz[i].id]: { ...answer } };
-    x.classList.toggle("hidden");
-    x.classList.remove("current");
-  } else if (
-    quiz[i].type == "multiple_choice" ||
-    quiz[i].type == "multiple_selection_choice"
-  ) {
-    let x = document.querySelector(`input[name="question${i}_choice"]`);
-    let currentAnswer = x.value;
-    let question = quiz[i].question;
-    let answer = { [question]: currentAnswer };
-    answers = { ...answers, [quiz[i].id]: { ...answer } };
-    x.classList.toggle("hidden");
-  } else if (quiz[i].type == "long_text" || quiz[i].type == "description") {
-    let x = document.getElementsByClassName("current")[0];
-    let currentAnswer = x.value;
-    let question = quiz[i].question;
-    let answer = { [question]: currentAnswer };
-    answers = { ...answers, [quiz[i].id]: { ...answer } };
-    x.classList.toggle("hidden");
-    x.classList.remove("current");
-  } else if (quiz[i].type == "true_false") {
-    let x = document.querySelector("input[name=bool]");
-    let currentAnswer = x.value;
-    let question = quiz[i].question;
-    let answer = { [question]: currentAnswer };
-    answers = { ...answers, [quiz[i].id]: { ...answer } };
-    x.classList.toggle("hidden");
-  }
-  console.log(i);
-  ++i;
-  if (i > quiz.length - 1) {
-    //display answer
-    questionsDiv.classList.toggle("hidden");
-    yourAnswers.classList.toggle("hidden");
-    const myJSON = JSON.stringify(answers, null, "\t");
-    document.getElementById("answerObject").innerHTML = myJSON;
-    return;
-  }
-  populateQuestion(i);
-};
+        let answers = {};
 
-//generate question
-function populateQuestion(qNum) {
-  let individualQuestion = quiz[qNum];
-  title.innerText = individualQuestion.question;
+        //step
+        nextButton.onclick = function () {
+          //get the answers
+          if (quiz[i].type == "short_answer") {
+            let x = document.getElementsByClassName("current")[0];
+            let currentAnswer = x.value;
+            let question = quiz[i].question;
+            let answer = { [question]: currentAnswer };
+            answers = { ...answers, [quiz[i].id]: { ...answer } };
+            x.classList.toggle("hidden");
+            x.classList.remove("current");
+          } else if (
+            quiz[i].type == "multiple_choice" ||
+            quiz[i].type == "multiple_selection_choice"
+          ) {
+            let x = document.querySelector(`input[name="question${i}_choice"]`);
+            let currentAnswer = x.value;
+            let question = quiz[i].question;
+            let answer = { [question]: currentAnswer };
+            answers = { ...answers, [quiz[i].id]: { ...answer } };
+            x.classList.toggle("hidden");
+          } else if (
+            quiz[i].type == "long_text" ||
+            quiz[i].type == "description"
+          ) {
+            let x = document.getElementsByClassName("current")[0];
+            let currentAnswer = x.value;
+            let question = quiz[i].question;
+            let answer = { [question]: currentAnswer };
+            answers = { ...answers, [quiz[i].id]: { ...answer } };
+            x.classList.toggle("hidden");
+            x.classList.remove("current");
+          } else if (quiz[i].type == "true_false") {
+            let x = document.querySelector("input[name=bool]");
+            let currentAnswer = x.value;
+            let question = quiz[i].question;
+            let answer = { [question]: currentAnswer };
+            answers = { ...answers, [quiz[i].id]: { ...answer } };
+            x.classList.toggle("hidden");
+          }
+          console.log(i);
+          ++i;
+          if (i > quiz.length - 1) {
+            //display answer
+            questionsDiv.classList.toggle("hidden");
+            yourAnswers.classList.toggle("hidden");
+            const myJSON = JSON.stringify(answers, null, "\t");
+            document.getElementById("answerObject").innerHTML = myJSON;
+            return;
+          }
+          populateQuestion(i);
+        };
 
-  //condition to check type of question
+        //generate question
+        function populateQuestion(qNum) {
+          let individualQuestion = quiz[qNum];
+          title.innerText = individualQuestion.question;
 
-  if (individualQuestion.type == "short_answer") {
-    selectionList.innerHTML = "";
-    short.classList.toggle("hidden");
-    short.classList.add("current");
-    short.placeholder = "your reason here";
-  } else if (
-    individualQuestion.type == "multiple_choice" ||
-    individualQuestion.type == "multiple_selection_choice"
-  ) {
-    selectionList.innerHTML = ""; //reset choices list
-    for (j in individualQuestion.answers) {
-      let radioBtnName = "question" + qNum + "_choice";
-      let choiceText = individualQuestion.answers[j].answer;
-      selectionList.appendChild(createLi(radioBtnName, choiceText));
-    }
-  } else if (
-    individualQuestion.type == "long_text" ||
-    individualQuestion.type == "description"
-  ) {
-    selectionList.innerHTML = "";
-    long.classList.toggle("hidden");
-    long.classList.add("current");
-    long.placeholder = "your reason here";
-  } else if (individualQuestion.type == "true_false") {
-    selectionList.innerHTML = "";
-    bool.appendChild(createLi("bool", "True"));
-    bool.appendChild(createLi("bool", "True"));
-  }
-}
+          //condition to check type of question
 
-//multiple choice
-function createLi(name, choiceText) {
-  let e = document.createElement("li");
-  let radioHtml =
-    '<input value="' + choiceText + '" type="radio" name="' + name + '"';
-  radioHtml += "/>";
-  radioHtml += choiceText;
-  e.innerHTML = radioHtml;
-  return e;
-}
+          if (individualQuestion.type == "short_answer") {
+            selectionList.innerHTML = "";
+            short.classList.toggle("hidden");
+            short.classList.add("current");
+            short.placeholder = "your reason here";
+          } else if (
+            individualQuestion.type == "multiple_choice" ||
+            individualQuestion.type == "multiple_selection_choice"
+          ) {
+            selectionList.innerHTML = ""; //reset choices list
+            for (j in individualQuestion.answers) {
+              let radioBtnName = "question" + qNum + "_choice";
+              let choiceText = individualQuestion.answers[j].answer;
+              selectionList.appendChild(createLi(radioBtnName, choiceText));
+            }
+          } else if (
+            individualQuestion.type == "long_text" ||
+            individualQuestion.type == "description"
+          ) {
+            selectionList.innerHTML = "";
+            long.classList.toggle("hidden");
+            long.classList.add("current");
+            long.placeholder = "your reason here";
+          } else if (individualQuestion.type == "true_false") {
+            selectionList.innerHTML = "";
+            bool.appendChild(createLi("bool", "True"));
+            bool.appendChild(createLi("bool", "True"));
+          }
+        }
 
-//call function at the beginning
-populateQuestion(i);
+        //multiple choice
+        function createLi(name, choiceText) {
+          let e = document.createElement("li");
+          let radioHtml =
+            '<input value="' +
+            choiceText +
+            '" type="radio" name="' +
+            name +
+            '"';
+          radioHtml += "/>";
+          radioHtml += choiceText;
+          e.innerHTML = radioHtml;
+          return e;
+        }
 
+        //call function at the beginning
+        populateQuestion(i);
+      });
     </script>
-</body>
+  </body>
 </html>

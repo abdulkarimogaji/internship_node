@@ -19,6 +19,7 @@ router.post("/", async (req, res, next) => {
     const db = req.app.get("db");
 
     const quiz = await db.quiz.create({
+      type: req.body.type,
       question: req.body.question,
       correct_answer: req.body.correct_answer,
     });
