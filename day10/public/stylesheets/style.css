@@ -4,5 +4,15 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+.qr-code {
+  height: 300px;
+  width: 300px;
+  object-fit: cover;
+}
+
+.center {
+  text-align: center;
 }
