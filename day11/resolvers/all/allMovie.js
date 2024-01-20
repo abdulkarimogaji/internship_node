@@ -16,12 +16,14 @@ const graphqlFields = require("graphql-fields");
 module.exports = async (_, { first, after }, { db, credential }, info) => {
   //Check Auth if user allowed
   try {
-    const attributes = db.user.intersection(graphqlFields(info).data);
+    const fields = graphqlFields(info).data;
+    const attributes = db.movie.intersection(fields);
 
     const options = {
       where: {},
       limit: first,
       attributes,
+      include: [],
     };
 
     if (after) {
@@ -32,17 +34,27 @@ module.exports = async (_, { first, after }, { db, credential }, info) => {
       };
     }
 
-    const { count, rows } = await db.user.findAndCountAll(options);
+    if (fields.hasOwnProperty("actors")) {
+      options.include.push({ model: db.actor, as: "actors" });
+    }
+    if (fields.hasOwnProperty("reviews")) {
+      options.include.push({ model: db.review, as: "reviews" });
+    }
+    if (fields.hasOwnProperty("genres")) {
+      options.include.push({ model: db.genre, as: "genres" });
+    }
+
+    const { count, rows } = await db.movie.findAndCountAll(options);
 
     return {
       success: true,
       data: rows,
-      message: "Users fetched successfully",
+      message: "Movies fetched successfully",
       errors: [],
       code: 200,
     };
   } catch (error) {
-    console.log("user -> error", error);
+    console.log("movie -> error", error);
     return new ApolloError("InternalServerError");
   }
 };

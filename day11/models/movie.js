@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       director_id: DataTypes.INTEGER,
       main_genre: DataTypes.INTEGER,
       status: DataTypes.INTEGER,
-      main_genre: DataTypes.STRING,
       created_at: DataTypes.DATEONLY,
       updated_at: DataTypes.DATE,
     },
@@ -106,6 +105,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "main_genre",
       constraints: false,
     });
+
+    Movie.hasMany(models.review, {
+      foreignKey: "movie_id",
+      constraints: false,
+    });
   };
 
   Movie.status_mapping = function (status) {
@@ -143,6 +147,23 @@ module.exports = (sequelize, DataTypes) => {
       ["status", "Status", "required|in_list[0,1]"],
       ["review", "Review", ""],
     ];
+  };
+
+  Movie.intersection = function (fields) {
+    if (fields) {
+      return intersection(
+        [
+          "id",
+          "title",
+          "director_id",
+          "main_genre",
+          "status",
+          "created_at",
+          "updated_at",
+        ],
+        Object.keys(fields)
+      );
+    } else return [];
   };
 
   return Movie;

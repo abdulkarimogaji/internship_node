@@ -87,6 +87,40 @@ type Link {
   user: User
 }
 
+type Movie {
+  id: ID!
+  title: String
+  director_id: Int
+  main_genre: Int
+  status: Int
+  actors: [Actor]
+  reviews: [Review]
+  mainGenre: Genre
+  genres: [Genre]
+}
+
+type Review {
+  id: ID!
+  notes: String
+  movie_id: Int
+}
+
+type Director {
+  id: ID!
+  name: String
+}
+
+type Actor {
+  id: ID!
+  name: String
+}
+
+type Genre {
+  id: ID!
+  name: String
+  movies: [Movie]
+}
+
 type MutationResponse {
   success: Boolean!
   message: String
@@ -162,8 +196,78 @@ type StepsImagesResponse {
   code: String
 }
 
+type MovieListResponse {
+  success: Boolean!
+  data: [Movie]
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type DirectorListResponse {
+  success: Boolean!
+  data: [Director]
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type ActorListResponse {
+  success: Boolean!
+  data: [Actor]
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type GenreListResponse {
+  success: Boolean!
+  data: [Genre]
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type UserListResponse {
+  success: Boolean!
+  data: [User]
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+
+type MovieResponse {
+  success: Boolean!
+  data: Movie
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type DirectorResponse {
+  success: Boolean!
+  data: Director
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type ActorResponse {
+  success: Boolean!
+  data: Actor
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+type GenreResponse {
+  success: Boolean!
+  data: Genre
+  message: String
+  errors: [ErrorResponse!]
+  code: String
+}
+
 type Query {
   user: UserResponse! @verifyUser
+
+  movie(id: ID): MovieResponse
+  director(id: ID): DirectorResponse
+  actor(id: ID): ActorResponse
+  genre(id: ID): GenreResponse
 
   getAllNotes: AllNotesResponse! @verifyUser
 
@@ -174,6 +278,12 @@ type Query {
   link: LinkResponse! @verifyUser
 
   getStepsImages: StepsImagesResponse!
+
+  getMovies: MovieListResponse!
+  getUsers: UserListResponse!
+  getActors: ActorListResponse!
+  getDirectors: DirectorListResponse!
+  getGenres: GenreListResponse!
 }
 
 type Mutation {
@@ -188,6 +298,8 @@ type Mutation {
     lat: Float
     lng: Float
   ): MutationResponse! @verifyUser
+
+  addActorToMoviesByGenre(genre_id: ID, actor_id: ID): MutationResponse!
 
   createNote(message: String!): MutationResponse! @verifyUser
   updateNote(id: ID!, message: String!): MutationResponse! @verifyUser

@@ -16,7 +16,7 @@ const graphqlFields = require("graphql-fields");
 module.exports = async (_, { first, after }, { db, credential }, info) => {
   //Check Auth if user allowed
   try {
-    const attributes = db.user.intersection(graphqlFields(info).data);
+    const attributes = db.genre.intersection(graphqlFields(info).data);
 
     const options = {
       where: {},
@@ -32,17 +32,17 @@ module.exports = async (_, { first, after }, { db, credential }, info) => {
       };
     }
 
-    const { count, rows } = await db.user.findAndCountAll(options);
+    const { count, rows } = await db.genre.findAndCountAll(options);
 
     return {
       success: true,
       data: rows,
-      message: "Users fetched successfully",
+      message: "Genres fetched successfully",
       errors: [],
       code: 200,
     };
   } catch (error) {
-    console.log("user -> error", error);
+    console.log("genre -> error", error);
     return new ApolloError("InternalServerError");
   }
 };

@@ -110,5 +110,14 @@ module.exports = (sequelize, DataTypes) => {
     ];
   };
 
+  Genre.intersection = function (fields) {
+    if (fields) {
+      return intersection(
+        ["id", "name", "created_at", "updated_at"],
+        Object.keys(fields)
+      );
+    } else return [];
+  };
+
   return Genre;
 };

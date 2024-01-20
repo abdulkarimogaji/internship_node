@@ -1,7 +1,6 @@
 "use strict";
 /*Powered By: Manaknightdigital Inc. https://manaknightdigital.com/ Year: 2021*/
 /**
- * user Resolve Add
  * @copyright 2021 Manaknightdigital Inc.
  * @link https://manaknightdigital.com
  * @license Proprietary Software licensing
@@ -13,15 +12,14 @@ const { ApolloError, UserInputError } = require("apollo-server-express");
 const { Validator } = require("node-input-validator");
 
 module.exports = async (parent, args, { db }, info) => {
-  console.log("got here");
   try {
-    const { first_name, last_name, phone } = args;
+    const { genre_id, actor_id } = args;
     const v = new Validator(
       {
-        first_name: args.first_name,
-        last_name: args.last_name,
+        genre_id,
+        actor_id,
       },
-      { first_name: "required", last_name: "required" }
+      { genre_id: "required", actor_id: "required" }
     );
 
     v.check().then(function (matched) {
@@ -32,10 +30,26 @@ module.exports = async (parent, args, { db }, info) => {
       }
     });
 
-    return await db.user.insert(
-      { first_name, last_name, phone },
-      { returnAllFields: true }
+    // get all movies with a main genre of genre_id
+    const movies = await db.movie.findAll({
+      where: { main_genre: genre_id },
+      attributes: ["id"],
+    });
+
+    await Promise.all(
+      movies.map((m) =>
+        db.movie_actor.create({
+          movie_id: m.id,
+          actor_id: actor_id,
+        })
+      )
     );
+    return {
+      success: true,
+      message: "actors added successfully",
+      errors: [],
+      code: 201,
+    };
   } catch (error) {
     console.log("create_user -> error", error);
     return new ApolloError("InternalServerError");
