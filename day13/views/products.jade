@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  header(data-bs-theme='dark')
+    #navbarHeader.collapse.text-bg-dark
+      .container
+        .row
+          .col-sm-8.col-md-7.py-4
+            h4 About
+            p.text-body-secondary
+              | Discover a curated selection of high-quality products that blend style and functionality seamlessly. From innovative gadgets to timeless essentials, our product range caters to every need and aspiration. Elevate your lifestyle with our thoughtfully chosen items, designed to enhance your daily experiences. Explore a world of craftsmanship, technology, and elegance at Day 13
+          .col-sm-4.offset-md-1.py-4
+            h4 Contact
+            ul.list-unstyled
+              li
+                a.text-white(href='#') Follow on Twitter
+              li
+                a.text-white(href='#') Like on Facebook
+              li
+                a.text-white(href='#') Email me
+    .navbar.navbar-dark.bg-dark.shadow-sm
+      .container
+        a.navbar-brand.d-flex.align-items-center(href='#')
+          strong Products
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarHeader' aria-controls='navbarHeader' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+  main
+    section.py-5.text-center.container
+      .row.py-lg-5
+        .col-lg-6.col-md-8.mx-auto
+          h1.fw-light Product listing
+          p.lead.text-body-secondary
+            | Showing all  products which match the result "Day 13"
+          p #{products.length} results found
+         
+    .album.py-5.bg-body-tertiary
+      .container
+        .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3.align-items-stretch
+          each product in products 
+            div(class="col")
+              .card.shadow-sm
+                img.bd-placeholder-img.card-img-top.object-fit-cover(width='100%' height='225' src="#{product.image}")
+                .card-body
+                  strong #{product.title}
+                  p.card-text  #{product.description}
+                  .d-flex.justify-content-between.align-items-center
+                    .btn-group
+                      a.btn.btn-sm.btn-outline-secondary(href='/products/#{product.id}') View
+                      button.btn.btn-sm.btn-outline-secondary(type='button') Add to cart
+                    small.text-body-secondary $ #{product.price}
+          
+          
+          
+  
+  
+
