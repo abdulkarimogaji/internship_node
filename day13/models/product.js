@@ -1,20 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
-  const location = sequelize.define(
-    "location",
+  const product = sequelize.define(
+    "product",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: DataTypes.STRING,
+      title: DataTypes.STRING,
+      description: DataTypes.STRING,
+      image: DataTypes.STRING,
+      price: DataTypes.DOUBLE,
       created_at: DataTypes.DATEONLY,
       updated_at: DataTypes.DATE,
     },
     {
       timestamps: true,
       freezeTableName: true,
-      tableName: "location",
+      tableName: "product",
     },
     {
       underscoredAll: false,
@@ -22,5 +25,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return location;
+  return product;
 };
