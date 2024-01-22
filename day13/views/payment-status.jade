@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .p-5
+    h1.text-center= message
+    if success 
+      .row.justify-content-center.mt-5
+        .col-md-5.col-lg-3.order-md-last
+          h4.d-flex.justify-content-between.align-items-center.mb-3
+            span.text-primary Your cart
+            span.badge.bg-primary.rounded-pill 1
+          ul.list-group.mb-3
+            li.list-group-item.d-flex.justify-content-between.lh-sm
+              div
+                h6.my-0 #{product.title}
+              span.text-body-secondary $#{product.price}
+            li.list-group-item.d-flex.justify-content-between.lh-sm
+              div
+                h6.my-0 Description
+                small.text-body-secondary #{product.description}
+              span.text-body-secondary 
+            li.list-group-item.d-flex.justify-content-between.lh-sm
+              div
+                h6.my-0 Ordered at
+                small.text-body-secondary #{ordered_at}
+              span.text-body-secondary 
+            li.list-group-item.d-flex.justify-content-between
+              span Total (USD)
+              strong $#{product.price}
