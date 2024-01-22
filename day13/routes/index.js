@@ -1,7 +1,7 @@
 var express = require("express");
-const stripe = require("stripe")(
-  "sk_test_51Ll5ukBgOlWo0lDU83gVbZQHnEFerz8t1BfWdhljzwP1CBNsqa6HRXwMm7fQrYYMHC1F2M0WyGOvZLmInXTE9nE900EgqSdmn6"
-);
+const config = require("../config");
+const stripe = require("stripe")(config.STRIPE_SECRET);
+const bodyParser = require("body-parser");
 
 var router = express.Router();
 
@@ -53,6 +53,9 @@ router.post("/products/:id", async (req, res, next) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(product.price * 100),
       currency: "usd",
+      metadata: {
+        product_id: product.id,
+      },
     });
     res.render("product-view", {
       title: "Checkout",
@@ -116,5 +119,59 @@ router.get("/products/:id/payment-complete", async (req, res, next) => {
     });
   }
 });
+
+router.post("/webhook", bodyParser.raw({ type: "*/*" }), async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+  const db = req.app.get("db");
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      config.STRIPE_ENDPOINT_SECRET
+    );
+  } catch (err) {
+    console.log("err", err);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  switch (event.type) {
+    case "payment_intent.succeeded":
+      handlePaymentIntentSucceeded(event, db);
+      break;
+    case "payment_intent.failed":
+      handlePaymentIntentFailed(event, db);
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  res.send();
+});
+
+async function handlePaymentIntentSucceeded(event, db) {
+  const paymentIntent = event.data.object;
+  if (paymentIntent.metadata.product_id) {
+    await db.order.create({
+      product_id: paymentIntent.metadata.product_id,
+      status: 1,
+      total: paymentIntent.amount_received / 100,
+      stripe_id: paymentIntent.id,
+    });
+  }
+}
+
+async function handlePaymentIntentFailed(event, db) {
+  const paymentIntent = event.data.object;
+  if (paymentIntent.metadata.product_id) {
+    await db.order.create({
+      product_id: paymentIntent.metadata.product_id,
+      status: 0,
+      total: paymentIntent.amount_received / 100,
+      stripe_id: paymentIntent.id,
+    });
+  }
+}
 
 module.exports = router;
