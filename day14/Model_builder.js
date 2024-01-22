@@ -36,17 +36,17 @@ function replaceVariables(str, variableObj) {
 }
 
 function Model_builder() {
-  let config = fs.readFileSync("configuration.json");
-
   this.build = async function () {
     const releaseFolderPath = "./release";
     try {
-      if (fs.existsSync(releaseFolderPath)) {
-        fs.rmSync(releaseFolderPath, { recursive: true });
+      if (!fs.existsSync(releaseFolderPath)) {
+        fs.mkdirSync(releaseFolderPath);
       }
-      fs.mkdirSync(releaseFolderPath);
       const modelFolderPath = path.join(releaseFolderPath, "/models");
-      fs.mkdirSync(modelFolderPath);
+
+      if (!fs.existsSync(modelFolderPath)) {
+        fs.mkdirSync(modelFolderPath);
+      }
 
       for (let i = 0; i < configuration.model.length; i++) {
         const model = configuration.model[i];
