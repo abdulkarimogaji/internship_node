@@ -1,0 +1,62 @@
+extends layout
+
+block content
+  header(data-bs-theme='dark')
+    #navbarHeader.collapse.text-bg-dark
+      .container
+        .row
+          .col-sm-8.col-md-7.py-4
+            h4 About
+            p.text-body-secondary
+              | Discover a curated selection of high-quality products that blend style and functionality seamlessly. From innovative gadgets to timeless essentials, our product range caters to every need and aspiration. Elevate your lifestyle with our thoughtfully chosen items, designed to enhance your daily experiences. Explore a world of craftsmanship, technology, and elegance at Day 13
+          .col-sm-4.offset-md-1.py-4
+            h4 Contact
+            ul.list-unstyled
+              li
+                a.text-white(href='#') Follow on Twitter
+              li
+                a.text-white(href='#') Like on Facebook
+              li
+                a.text-white(href='#') Email me
+    .navbar.navbar-dark.bg-dark.shadow-sm
+      .container
+        a.navbar-brand.d-flex.align-items-center(href='/products')
+          strong Products
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarHeader' aria-controls='navbarHeader' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+  main
+    if client_secret
+      .modal.fade(tabindex='-1' id="exampleModal")
+        .modal-dialog.modal-dialog-centered
+          .modal-content
+            .modal-header
+              h5.modal-title Checkout
+              button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+            .modal-body
+              form#payment-form(data-secret='#{client_secret}' class="modal-body" data-product-id="#{product.id}")
+                #payment-element
+                div(id="error-message")
+                button.btn.btn-primary.btn-lg.px-4.mt-3#submit(type="submit") Pay
+            
+
+
+    .container.col-xxl-8.px-4.py-5
+      .row.flex-lg-row-reverse.align-items-center.g-5.py-5
+        .col-10.col-sm-8.col-lg-6
+          img.d-block.mx-lg-auto.img-fluid(src='#{product.image}' alt='Bootstrap Themes' width='700' height='500' loading='lazy')
+        .col-lg-6
+          h1.display-5.fw-bold.text-body-emphasis.lh-1.mb-3 #{product.title}
+          p.lead
+            | #{product.description}
+          p.mb-1.fw-semibold Price: $#{product.price}
+          form.d-grid.gap-2.d-md-flex.justify-content-md-start(action="/products/#{product.id}" method="post")
+            button.btn.btn-primary.btn-lg.px-4.me-md-2(type='submit') Buy now
+            a.btn.btn-outline-secondary.btn-lg.px-4(href='/products') Go back
+  if client_secret
+    script(src='https://js.stripe.com/v3/')        
+    script(src='/js/checkout.js')        
+          
+          
+  
+  
+
