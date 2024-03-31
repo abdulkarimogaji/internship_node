@@ -2,39 +2,32 @@ const db = require("../models");
 const { QueryTypes } = require("sequelize");
 const axios = require("axios");
 const { sqlDateTimeFormat } = require("../services/UtilsService");
+const nodemailer = require("nodemailer");
 
-async function sendEmail(receiver, subject, body) {
-  try {
-    const headers = {
-      Accept: "application/json",
-      "Api-Token": "21b5a3540e0ca9910b395e6ea1a6598a",
-      "Content-Type": "application/json",
-    };
-
-    const resp = await axios.post(
-      "https://stoplight.io/mocks/railsware/mailtrap-api-docs/93404133/api/send",
+function sendEmail(receiver, subject, body) {
+  var transporter = nodemailer.createTransport({
+    host: "mail.mkdlabs.com",
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+      user: "info@mkdlabs.com",
+      pass: "1rmw8ya843P=",
+    },
+  });
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(
       {
-        to: [
-          {
-            email: receiver,
-            name: "Receiver's name",
-          },
-        ],
-        from: {
-          email: "sales@example.com",
-          name: "Example Sales Team",
-        },
-        subject: subject,
-        text: body,
+        sender: "info@mkdlabs.com",
+        to: receiver,
+        html: body,
+        subject,
       },
-      { headers }
+      (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      }
     );
-    console.log("resp", resp);
-    return true;
-  } catch (err) {
-    console.log("err", err);
-    return false;
-  }
+  });
 }
 
 function replaceVariables(str, variableObj) {
