@@ -48,11 +48,11 @@ main div.open {
   display: block;
 }
 
-.background-wrapper {
+.content-wrapper {
   display: flex;
 }
 
-.color-section {
+.selection-section {
   padding: 30px;
   background-color: white;
   max-width: 400px;
@@ -107,4 +107,39 @@ main div.open {
 
 #canvas {
   background-color: coral;
+}
+
+.text-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.text-selector-container > button {
+  width: 100%;
+  border: none;
+  background-color: #eee;
+  border-radius: 5px;
+  font-weight: bolder;
+  white-space: nowrap;
+  padding: 0.3rem 1rem;
+}
+
+.text-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.text-controls select {
+  border: none;
+  padding: 5px 10px;
+  font-size: 18px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.text-controls button {
+  border: none;
 }

@@ -62,19 +62,20 @@ const server = new ApolloServer({
   resolvers,
   schemaDirectives,
   context: async ({ req }) => {
-    const token = req.headers.authorization;
+    // const token = req.headers.authorization;
 
-    if (!token) {
-      throw new AuthenticationError(
-        "Invalid token",
-        errorCodes.token.INVALID_TOKEN
-      );
-    }
+    // if (!token) {
+    //   throw new AuthenticationError(
+    //     "Invalid token",
+    //     errorCodes.token.INVALID_TOKEN
+    //   );
+    // }
 
-    const cleanToken = token.replace("Bearer ", "");
-    let verify = jwtService.verifyAccessToken(cleanToken);
+    // const cleanToken = token.replace("Bearer ", "");
+    // let verify = jwtService.verifyAccessToken(cleanToken);
 
-    console.log("here", verify);
+    // console.log("here", verify);
+    let verify = {};
 
     verify.role_id = 1;
     verify.user = 1;

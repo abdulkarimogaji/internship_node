@@ -8,4 +8,5 @@ module.exports = function (req, res, next) {
       message: "Server under maintenance",
     });
   }
+  next();
 };
