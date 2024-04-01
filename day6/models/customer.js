@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      shopify_customer_id: DataTypes.INTEGER,
+      shopify_customer_id: DataTypes.BIGINT,
       shopify_customer_email: DataTypes.STRING,
       created_at: DataTypes.DATEONLY,
       updated_at: DataTypes.DATE,

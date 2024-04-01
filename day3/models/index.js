@@ -14,11 +14,11 @@ let Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const { DataTypes } = require("sequelize");
 const config = {
-  DB_DATABASE: "day_1",
+  DB_DATABASE: "day_3",
   DB_USERNAME: "root",
   DB_PASSWORD: "",
   DB_ADAPTER: "mysql",
-  DB_NAME: "day_1",
+  DB_NAME: "day_3",
   DB_HOSTNAME: "localhost",
   DB_PORT: 3306,
 };

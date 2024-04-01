@@ -10,7 +10,7 @@ router.get("/", function (req, res, next) {
 /* GET products page. */
 router.get("/products", async (req, res, next) => {
   try {
-    const products = (await getProducts()).products;
+    const products = (await getProducts()).data.products;
 
     console.log("prod", products[0].image.src);
     res.render("products", {

@@ -5,7 +5,9 @@ const { getCustomers } = require("../services/shopifyService");
 (async function pullCustomersCronjob() {
   console.log("*********** Starting cronjob ********", new Date());
   try {
-    const shopifyCustomers = (await getCustomers()).customers;
+    const shopifyCustomers = (await getCustomers()).data.customers;
+
+    console.log("resp", shopifyCustomers);
 
     for (let i = 0; i < shopifyCustomers.length; i++) {
       const shopifyCustomer = shopifyCustomers[i];
